@@ -1,0 +1,15 @@
+FEATURES
+1. A main dashboard to view server information such as
+  1. server uptime
+  2. Servers currently active
+  3. Player Counts
+  4. Ram Usage
+  5. CPU usage
+  6. Available storage space
+2. A Server Management page where users can start, stop and create new minecraft server instances.
+
+FRAMEWORKS
+1. Express will host the server
+2. Node will Server up compiled EJS
+3. Docker will allow for easy deployment of the web server
+4. Socket IO will be used to enable real time comunication between the server and clients
