@@ -13,3 +13,4 @@ FRAMEWORKS
 2. Node will Server up compiled EJS
 3. Docker will allow for easy deployment of the web server
 4. Socket IO will be used to enable real time comunication between the server and clients
+5. EJS will be used to allow Javascript variable to be wrote inside of html so i can dynamically generate pages
