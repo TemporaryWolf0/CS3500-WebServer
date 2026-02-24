@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+h2, p {
+  margin: 10px;
+}
+
+.site-nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333333;
+}
+
+.site-nav ul li {
+  float: left;
+}
+
+.site-nav ul li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.site-nav ul li a:hover:not(.active) {
+  background-color: #111111;
+}
+
+.site-nav ul li a.active {
+  background-color: #04AA6D;
+}

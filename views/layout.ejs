@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link href="/styles/layout.css" rel="stylesheet"/>
+</head>
+<body>
+  <nav class="site-nav">
+    <ul>
+      <% navLinks.forEach(link => { %>
+        <li>
+          <a href="<%= link.path %>" class="<%= active === link.key ? 'active' : '' %>">
+            <%= link.name %>
+          </a>
+        </li>
+      <% }) %>
+    </ul>
+  </nav>
+
+
+    <main class="main-container">
+    <%- include(content) %>
+  </main>
+</body>
+</html>
+

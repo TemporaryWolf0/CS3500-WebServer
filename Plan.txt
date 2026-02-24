@@ -18,11 +18,13 @@ FRAMEWORK STACK
 4. SQL for database 
 5. Docker will allow for easy deployment of the web server
 6. Socket IO will be used to enable real time comunication between the server and clients
+7. Bootstrap for Html Styles
 
 TODO NOW
 1. Create Home Page without backend support
+2. Create Main Container to host pages including Nav which is dynamically loaded from sql server
 2. Create basic login
-3. Outline essential SQL tables (user, server, login, archives)
+3. Outline essential SQL tables (user, pages, server, login, archives)
 4. Create game server VIA webrowser as a proof of concept with variables
 
 THINGS TO THINK ABOUT
@@ -36,4 +38,4 @@ THINGS TO LEARN
 2. How to get server status
 3. How to interface with In-Game stats and users
 4. Socket IO - Seen it at work before but never wrote code for it myself.
-4. 
+5. The company I used to work for used Mongo DB to automatically update nav and pages - How? 
