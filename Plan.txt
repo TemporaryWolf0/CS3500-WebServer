@@ -11,14 +11,29 @@ FEATURES
 4. an archive system to store unused servers on HD instead of SSD
 
 
-FRAMEWORKS
-1. Express will host the server
-2. Node will Server up compiled EJS
-3. Docker will allow for easy deployment of the web server
-4. Socket IO will be used to enable real time comunication between the server and clients
-5. EJS will be used to allow Javascript variable to be wrote inside of html so i can dynamically generate pages
-6. SQL for database 
+FRAMEWORK STACK
+1. Node will be used as the server backend
+2. Express will host the server
+3. EJS will be used to allow Javascript variable to be wrote inside of html so i can dynamically generate pages
+4. SQL for database 
+5. Docker will allow for easy deployment of the web server
+6. Socket IO will be used to enable real time comunication between the server and clients
 
-PRIORITYS
+TODO NOW
 1. Create Home Page without backend support
-2. Create user models for permissions via SQL
+2. Create basic login
+3. Outline essential SQL tables (user, server, login, archives)
+4. Create game server VIA webrowser as a proof of concept with variables
+
+THINGS TO THINK ABOUT
+1. How to handle user permissions - Connect google/microsoft account for easy signup/login - Standalone signup without connection
+2. what should each role have permissions to do - Admin, Mod, Verified, ViewOnly 
+3. Should there be a page/tab dedicated to each server 
+4. Resource managment between game servers - what gets priority? Most Users/Highest Permissions/Priority Assignment?
+
+THINGS TO LEARN
+1. How to start server using a docker compose with some variable store
+2. How to get server status
+3. How to interface with In-Game stats and users
+4. Socket IO - Seen it at work before but never wrote code for it myself.
+4. 
