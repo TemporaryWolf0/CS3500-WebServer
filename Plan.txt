@@ -7,6 +7,9 @@ FEATURES
   5. CPU usage
   6. Available storage space
 2. A Server Management page where users can start, stop and create new minecraft server instances.
+3. A login system so that users can be given permissions to prevent user conflicts
+4. an archive system to store unused servers on HD instead of SSD
+
 
 FRAMEWORKS
 1. Express will host the server
@@ -14,3 +17,8 @@ FRAMEWORKS
 3. Docker will allow for easy deployment of the web server
 4. Socket IO will be used to enable real time comunication between the server and clients
 5. EJS will be used to allow Javascript variable to be wrote inside of html so i can dynamically generate pages
+6. SQL for database 
+
+PRIORITYS
+1. Create Home Page without backend support
+2. Create user models for permissions via SQL
