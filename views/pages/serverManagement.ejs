@@ -1,0 +1,13 @@
+<form action="/servers/create" method="POST">
+  <label for="name">Server Name</label>
+  <input type="text" id="name" name="name" required>
+  <button type="submit">Create Server</button>
+</form>
+
+<form action="/servers/<%= server.id %>/start" method="POST">
+  <button type="submit">Start</button>
+</form>
+
+<form action="/servers/<%= server.id %>/stop" method="POST">
+  <button type="submit">Stop</button>
+</form>
