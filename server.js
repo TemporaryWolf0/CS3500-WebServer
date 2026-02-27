@@ -1,8 +1,10 @@
-const express = require('express');
-const path = require('path');
+import express from "express";
+import path from "path";
+import fs from "fs";
+import expressLayouts from "express-ejs-layouts";
+import sql from "./db/sqlManager.js";
+
 const app = express();
-const fs = require('fs');
-const expressLayouts = require('express-ejs-layouts');
 
 app.use(expressLayouts);
 
