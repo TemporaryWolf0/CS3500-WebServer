@@ -1,7 +1,5 @@
-const fs = require('fs');
-const path = require('path');
-
-
+import path from "path";
+import fs from "fs";
 import { exec } from "child_process";
 
 export function startServer(composePath) {
