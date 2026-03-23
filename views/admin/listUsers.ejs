@@ -1,0 +1,29 @@
+<%- include('../partials/header') %>
+
+<h2>All Users</h2>
+<a href="/admin/users/add">Add New User</a>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Username</th>
+      <th>Role</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.forEach(u => { %>
+      <tr>
+        <td><%= u.name %></td>
+        <td><%= u.username %></td>
+        <td><%= u.role %></td>
+        <td>
+          <a href="/admin/users/<%= u._id %>/delete">Remove</a>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<%- include('../partials/footer') %>

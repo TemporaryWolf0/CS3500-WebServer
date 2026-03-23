@@ -3,7 +3,7 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspace",
-  "forwardPorts": [3000],
+  "forwardPorts": [3000,27017],
   "remoteUser": "node",
   "postCreateCommand": "npm install",
   "features": {

@@ -6,8 +6,8 @@ const router = express.Router();
 
 const navLinks = [
   { name: "Dashboard", path: "/pages/dashboard", key: "dashboard" },
-  { name: "About", path: "/pages/about", key: "about" },
-  { name: "Contact", path: "/pages/contact", key: "contact" }
+  { name: "login", path: "/pages/login", key: "login" },
+  { name: "register", path: "/pages/register", key: "register" }
 ];
 
 router.get("/*page", (req, res) => {
