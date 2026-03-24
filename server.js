@@ -9,6 +9,7 @@ dotenv.config();
 
 import pagesRouter from "./routes/PublicRoutes.js";
 import authRouter from "./routes/authRoutes.js";
+import * as auth from './controllers/authController.js';
 
 
 const app = express();
@@ -38,19 +39,16 @@ app.get("/", (req, res) => res.redirect("/pages/dashboard"));
     const adminPass = process.env.ADMIN_PASSWORD || process.env.ADMIN_PASS;
     const adminEmail = process.env.ADMIN_EMAIL;
     if (adminUser && adminPass) {
-      try {
-        // controllers/authController.js is CommonJS; import dynamically
-        const authMod = await import('./controllers/authController.js');
-        const auth = authMod.default || authMod;
-        if (typeof auth.ensureAdmin === 'function') {
+      if (typeof auth.ensureAdmin === 'function') {
+        try {
           const res = await auth.ensureAdmin({ username: adminUser, password: adminPass, email: adminEmail });
           if (res && res.created) console.log('Created admin user:', res.user._id || res.user.id);
           else console.log('Admin user already exists:', res.user._id || res.user.id);
-        } else {
-          console.warn('authController.ensureAdmin not available');
+        } catch (e) {
+          console.error('Error ensuring admin user exists via authController', e);
         }
-      } catch (e) {
-        console.error('Error ensuring admin user exists via authController', e);
+      } else {
+        console.warn('authController.ensureAdmin not available');
       }
     }
 

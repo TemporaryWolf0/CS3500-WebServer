@@ -1,5 +1,6 @@
 // controllers/authController.js (ESM)
-import User from '../models/User.js';
+import db from '../db/dbManager.js';
+import bcrypt from 'bcryptjs';
 
 export const getLogin = (req, res) => {
   res.render('auth/login', { message: req.flash('error') });
@@ -26,15 +27,14 @@ export const postRegister = async (req, res) => {
   try {
     const { name, email, phone, password, role } = req.body;
     // Make sure user doesn’t already exist
-    let user = await User.findOne({ email });
+    let user = await db.getUserByEmail(email);
     if (user) {
       req.flash('error', 'User already exists');
       return res.redirect('/register');
     }
 
-    // Create new user
-    user = new User({ name, email, phone, password, role });
-    await user.save();
+    // Create new user (hashing handled by dbManager)
+    await db.createUser({ name, email, phone, password, role });
     res.redirect('/login');
   } catch (error) {
     console.error(error);
@@ -52,20 +52,20 @@ export const logout = (req, res) => {
 // Programmatic helper: create a user (returns created user or null if exists)
 export async function createUserProgrammatic({ name, email, phone = '', password, role = 'public' }) {
   if (!email || !password || !name) throw new Error('name, email and password required');
-  const existing = await User.findOne({ $or: [{ email }, { username: name }] });
-  if (existing) return null;
-  const user = new User({ name, email, phone, password, role, username: name });
-  await user.save();
-  return user;
+  const existingByEmail = await db.getUserByEmail(email);
+  const existingByUsername = await db.getUserByUsername(name);
+  if (existingByEmail || existingByUsername) return null;
+  const created = await db.createUser({ name, email, phone, password, role, username: name });
+  return created;
 }
 
 // Ensure an admin user exists (checks by username or email)
 export async function ensureAdmin({ username, password, email }) {
   if (!username || !password) throw new Error('username and password required');
-  const query = email ? { $or: [{ username }, { email }] } : { username };
-  const existing = await User.findOne(query);
+  const existingByUsername = await db.getUserByUsername(username);
+  const existingByEmail = email ? await db.getUserByEmail(email) : null;
+  const existing = existingByUsername || existingByEmail;
   if (existing) return { created: false, user: existing };
-  const user = new User({ name: username, username, email: email || `${username}@example.com`, password, role: 'admin' });
-  await user.save();
-  return { created: true, user };
+  const created = await db.createUser({ name: username, username, email: email || `${username}@example.com`, password, role: 'admin' });
+  return { created: true, user: created };
 }

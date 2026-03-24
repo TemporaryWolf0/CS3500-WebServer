@@ -28,6 +28,7 @@ async function init() {
     await db.createCollection("users");
   } catch (e) {}
   await db.collection("users").createIndex({ username: 1 }, { unique: true }).catch(() => {});
+  await db.collection("users").createIndex({ email: 1 }, { unique: true }).catch(() => {});
 }
 
 async function createServer(config) {
@@ -47,16 +48,34 @@ async function getServerConfig(id) {
   return database.collection("servers").findOne({ _id });
 }
 
-async function createUser({ username, password, permissions = 10 }) {
+// Create a user document with fields compatible with previous Mongoose model
+async function createUser({ name, email, phone = '', password, role = 'public', username }) {
+  if (!name || !email || !password) throw new Error('name, email and password required');
   const database = await connect();
   const hash = await bcrypt.hash(password, 10);
-  const res = await database.collection("users").insertOne({ username, password: hash, permissions, serversGuid: [], created_at: new Date() });
-  return res.insertedId.toString();
+  const doc = {
+    name,
+    email,
+    username: username || name,
+    phone,
+    role,
+    password: hash,
+    serversGuid: [],
+    created_at: new Date(),
+    updated_at: new Date()
+  };
+  const res = await database.collection("users").insertOne(doc);
+  return { id: res.insertedId.toString(), ...doc };
 }
 
 async function getUserByUsername(username) {
   const database = await connect();
   return database.collection("users").findOne({ username });
+}
+
+async function getUserByEmail(email) {
+  const database = await connect();
+  return database.collection("users").findOne({ email });
 }
 
 async function getUserById(id) {
@@ -80,5 +99,7 @@ export default {
   createServer,
   getServerConfig,
   createUser,
-  getUserByUsername
+  getUserByUsername,
+  getUserByEmail,
+  getUserById
 };
