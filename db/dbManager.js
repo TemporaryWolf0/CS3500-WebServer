@@ -68,6 +68,11 @@ async function createUser({ name, email, phone = '', password, role = 'public', 
   return { id: res.insertedId.toString(), ...doc };
 }
 
+async function verifyPassword(user, password) {
+  if (!user || !user.password) return false;
+  return bcrypt.compare(password, user.password);
+}
+
 async function getUserByUsername(username) {
   const database = await connect();
   return database.collection("users").findOne({ username });
@@ -101,5 +106,6 @@ export default {
   createUser,
   getUserByUsername,
   getUserByEmail,
-  getUserById
+  getUserById,
+  verifyPassword
 };

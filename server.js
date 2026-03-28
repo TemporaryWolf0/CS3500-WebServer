@@ -4,6 +4,9 @@ import fs from "fs";
 import expressLayouts from "express-ejs-layouts";
 import dotenv from "dotenv";
 import db from "./db/dbManager.js";
+import session from "express-session";
+import passport from "passport";
+import { Strategy as LocalStrategy } from 'passport-local';
 
 dotenv.config();
 
@@ -24,6 +27,31 @@ app.set("view engine", "ejs");
 app.set("views", path.join(process.cwd(), "views"));
 
 app.use(express.static(path.join(process.cwd(), "public")));
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'change-this-secret',
+  resave: false,
+  saveUninitialized: false
+}));
+
+// Passport.js setup for authentication
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Local strategy for username/password authentication
+passport.use(new LocalStrategy(async (username, password, done) => {
+  const user = await db.getUserByUsername(username);
+  if (!user) return done(null, false, { message: 'Incorrect username' });
+  const ok = await db.verifyPassword(user, password);
+  if (!ok) return done(null, false, { message: 'Incorrect password' });
+  return done(null, user);
+}));
+// Serialize user ID to session for login persistence
+passport.serializeUser((user, done) => done(null, user._id || user.id));
+passport.deserializeUser(async (id, done) => {
+  const u = await db.getUserById(id);
+  done(null, u || false);
+});
 
 app.use("/pages", pagesRouter);
 app.use("/auth", authRouter);

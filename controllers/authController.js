@@ -1,23 +1,20 @@
 // controllers/authController.js (ESM)
 import db from '../db/dbManager.js';
 import bcrypt from 'bcryptjs';
+import passport from 'passport';
 
 export const getLogin = (req, res) => {
-  res.render('auth/login', { message: req.flash('error') });
+  const msg = req.session && req.session.messages;
+  if (req.session) delete req.session.messages;
+  res.render('auth/login', { message: msg ? msg[0] : null });
 };
 
-export const postLogin = async (req, res, next) => {
-  const mod = await import('passport').catch(() => null);
-  const passport = mod && mod.default ? mod.default : mod;
-  if (!passport || typeof passport.authenticate !== 'function') {
-    return res.status(500).send('Authentication not available');
-  }
-  return passport.authenticate('local', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/login',
-    failureFlash: true
+export const postLogin = (req, res, next) =>
+  passport.authenticate('local', {
+    successRedirect: '/pages/dashboard',
+    failureRedirect: '/pages/login',
+    failureMessage: true
   })(req, res, next);
-};
 
 export const getRegister = (req, res) => {
   res.render('auth/register');
