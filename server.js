@@ -53,6 +53,12 @@ passport.deserializeUser(async (id, done) => {
   done(null, u || false);
 });
 
+// expose current user to views (used by templates)
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user || null;
+  next();
+});
+
 app.use("/pages", pagesRouter);
 app.use("/auth", authRouter);
 app.get("/", (req, res) => res.redirect("/pages/dashboard"));
