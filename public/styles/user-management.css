@@ -1,0 +1,110 @@
+/* Page container */
+.user-management-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Section titles */
+.user-management-container h2 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+/* Add User Form */
+.add-user-box {
+  background: #f2f2f2;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 25px;
+  border: 1px solid #ccc;
+  max-width: 500px;
+}
+
+.add-user-box label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.add-user-box input,
+.add-user-box select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+.add-user-box button {
+  background-color: #04AA6D;
+  color: white;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-user-box button:hover {
+  background-color: #038e5c;
+}
+
+/* User Table */
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.user-table th,
+.user-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.user-table th {
+  background-color: #e6e6e6;
+  text-align: left;
+}
+
+.user-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Inline forms for actions */
+.inline-form {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.inline-form select {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #aaa;
+}
+
+.inline-form button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Update button */
+.inline-form .update-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.inline-form .update-btn:hover {
+  background-color: #0066d1;
+}
+
+/* Delete button */
+.inline-form .delete-btn {
+  background-color: #d9534f;
+  color: white;
+}
+
+.inline-form .delete-btn:hover {
+  background-color: #c64541;
+}

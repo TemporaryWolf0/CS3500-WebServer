@@ -88,6 +88,18 @@ async function getUserById(id) {
   const _id = typeof id === "string" ? new ObjectId(id) : id;
   return database.collection("users").findOne({ _id });
 }
+async function removeUser(userid, email) {
+  const database = await connect();
+  return database.collection("users").deleteOne({ _id: new ObjectId(userid) });
+}
+async function updateUser(username, updateFields) {
+  const database = await connect();
+  return database.collection("users").updateOne({ username }, { $set: updateFields });
+}
+async function findUser(username, email) {
+  const database = await connect();
+  return database.collection("users").findOne({ username, email });
+}
 
 async function addServerToUser(userId, serverId) {
   const database = await connect();
@@ -98,6 +110,20 @@ async function addServerToUser(userId, serverId) {
   return true;
 }
 
+async function getUserList() {
+  const database = await connect();
+  return await database.collection("users").find(
+    {},
+    {
+      projection: {
+        username: 1,
+        email: 1,
+        name: 1,
+        role: 1
+      }
+    }
+  ).toArray();
+}
 export default {
   connect,
   init,
@@ -107,5 +133,9 @@ export default {
   getUserByUsername,
   getUserByEmail,
   getUserById,
-  verifyPassword
+  verifyPassword,
+  getUserList,
+  findUser,
+  removeUser,
+  updateUser
 };

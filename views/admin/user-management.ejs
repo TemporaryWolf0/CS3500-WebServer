@@ -1,0 +1,77 @@
+<div class="user-management-container">
+
+  <h2>Add New User</h2>
+
+  <div class="add-user-box">
+    <form action="user-management/new-user" method="POST">
+      <label>Name</label>
+      <input type="text" name="name">
+
+      <label>Username</label>
+      <input type="text" name="username">
+
+      <label>Email</label>
+      <input type="email" name="email">
+
+      <label>Role</label>
+      <select name="role">
+        <option value="public">Public</option>
+        <option value="moderator">Moderator</option>
+        <option value="admin">Admin</option>
+      </select>
+
+      <label>Password</label>
+      <input type="password" name="password">
+
+      <button type="submit">Add User</button>
+    </form>
+  </div>
+
+  <h2>Existing Users</h2>
+
+  <table class="user-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% users.forEach(user => { %>
+        <tr>
+          <td><%= user.name %></td>
+          <td><%= user.username %></td>
+          <td><%= user.email %></td>
+          <td><%= user.role %></td>
+
+          <td>
+            <!-- Update Role -->
+            <form class="inline-form" action="user-management/update-user" method="POST">
+              <input type="hidden" name="username" value="<%= user.username %>">
+
+              <select name="role">
+                <option value="public" <%= user.role === "public" ? "selected" : "" %>>Public</option>
+                <option value="moderator" <%= user.role === "moderator" ? "selected" : "" %>>Moderator</option>
+                <option value="admin" <%= user.role === "admin" ? "selected" : "" %>>Admin</option>
+              </select>
+
+              <button class="update-btn" type="submit">Update</button>
+            </form>
+
+            <!-- Delete -->
+            <form class="inline-form" action="user-management/remove-user" method="POST">
+              <input type="hidden" name="username" value="<%= user.username %>">
+              <input type="hidden" name="userId" value="<%= user._id %>">
+              <button class="delete-btn" type="submit">Remove</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+</div>

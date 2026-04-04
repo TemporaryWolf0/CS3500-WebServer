@@ -4,17 +4,37 @@
   <meta charset="UTF-8">
   <title><%= title %></title>
   <link href="/styles/layout.css" rel="stylesheet"/>
+  <% if (title !== 'NA') { %>
+    <link href="/styles/<%= title %>.css" rel="stylesheet"/>
+  <% } %>
+
 </head>
 <body>
   <div class="site-nav">
-      <% navLinks.forEach(link => { %>
+      <% navLinks.public.forEach(link => { %>
           <a href="<%= link.path %>" class="<%= active === link.key ? 'active' : '' %>">
             <%= link.name %>
           </a>
       <% }) %>
+
+      <% navLinks.moderator.forEach(link => { %>
+          <% if (currentUser && currentUser.role !== 'public') { %>
+          <a href="<%= link.path %>" class="<%= active === link.key ? 'active' : '' %>">
+            <%= link.name %>
+          </a>
+          <% } %>
+      <% }) %>
+      <% navLinks.admin.forEach(link => { %>
+          <% if (currentUser && currentUser.role === 'admin') { %>
+          <a href="<%= link.path %>" class="<%= active === link.key ? 'active' : '' %>">
+            <%= link.name %>
+          </a>
+          <% } %>
+      <% }) %>
+
       <% if (currentUser) { %>
           <a href="/pages/profile" class="split"><%= currentUser.username %></a>
-
+          
       <% } else { %>
           <a href="/pages/login" class="split">Login</a>
       <% } %>

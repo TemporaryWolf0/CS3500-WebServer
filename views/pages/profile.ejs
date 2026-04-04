@@ -1,0 +1,29 @@
+<div class="profile-container">
+  <h2>Your Profile</h2>
+
+  <form class="profile-form" action="/auth/profile-update" method="POST">
+    <input type="hidden" name="origUsername" value="<%= currentUser.username %>">
+
+    <label>Name</label>
+    <input type="text" name="name" value="<%= currentUser.name || '' %>">
+
+    <label>Username</label>
+    <input type="text" name="username" value="<%= currentUser.username || '' %>">
+
+    <label>Email</label>
+    <input type="email" name="email" value="<%= currentUser.email || '' %>">
+
+    <label>Phone</label>
+    <input type="text" name="phone" value="<%= currentUser.phone || '' %>">
+
+    <button type="submit">Update Profile</button>
+  </form>
+
+  <div class="profile-actions">
+    <a class="logout-btn" href="/auth/logout">Logout</a>
+
+    <form id="deleteForm" action="/auth/profile-delete" method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
+      <button class="delete-btn" type="submit">Delete Account</button>
+    </form>
+  </div>
+</div>

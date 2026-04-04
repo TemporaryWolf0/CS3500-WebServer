@@ -11,6 +11,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 dotenv.config();
 
 import pagesRouter from "./routes/PublicRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import * as auth from './controllers/authController.js';
 
@@ -54,13 +55,33 @@ passport.deserializeUser(async (id, done) => {
 });
 
 // expose current user to views (used by templates)
+// Also expose navLinks to views so we can conditionally show/hide links based on role
 app.use((req, res, next) => {
   res.locals.currentUser = req.user || null;
+
+  res.locals.navLinks = {
+  public: [
+    { name: "Dashboard", path: "/pages/dashboard", key: "dashboard", css: "NA" },
+    { name: "login", path: "/pages/login", key: "login", css: "NA" },
+    { name: "register", path: "/pages/register", key: "register", css: "NA" }
+  ],
+  moderator: [
+    { name: "Moderation", path: "/pages/moderation", key: "moderation", css: "NA" }
+  ],
+  admin: [
+    { name: "Admin Panel", path: "/admin", key: "admin", css: "NA" },
+    { name: "User Management", path: "/admin/user-management", key: "user-management", css: "NA" }
+  ]
+  
+};
+
   next();
 });
 
+
 app.use("/pages", pagesRouter);
 app.use("/auth", authRouter);
+app.use("/admin", adminRoutes);
 app.get("/", (req, res) => res.redirect("/pages/dashboard"));
 
 // initialize database (creates collections/indexes) and perform startup tasks

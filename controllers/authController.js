@@ -6,7 +6,7 @@ import passport from 'passport';
 export const getLogin = (req, res) => {
   const msg = req.session && req.session.messages;
   if (req.session) delete req.session.messages;
-  res.render('auth/login', { message: msg ? msg[0] : null });
+  res.render('pages/login', { message: msg ? msg[0] : null });
 };
 
 export const postLogin = (req, res, next) =>
@@ -17,7 +17,7 @@ export const postLogin = (req, res, next) =>
   })(req, res, next);
 
 export const getRegister = (req, res) => {
-  res.render('auth/register');
+  res.render('pages/register');
 };
 
 export const postRegister = async (req, res) => {
@@ -32,17 +32,17 @@ export const postRegister = async (req, res) => {
 
     // Create new user (hashing handled by dbManager)
     await db.createUser({ name, email, phone, password, role });
-    res.redirect('/login');
+    res.redirect('/pages/login');
   } catch (error) {
     console.error(error);
-    res.redirect('/register');
+    res.redirect('/pages/register');
   }
 };
 
-export const logout = (req, res) => {
+export const logout = (req, res, next) => {
   req.logout((err) => {
     if (err) { return next(err); }
-    res.redirect('/login');
+    res.redirect('/pages/login');
   });
 };
 
