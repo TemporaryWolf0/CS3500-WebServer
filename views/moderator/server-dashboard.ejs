@@ -1,0 +1,140 @@
+<%# server-dashboard.ejs %>
+<link rel="stylesheet" href="/styles/server-dashboard.css">
+
+<div class="dashboard">
+
+  <div class="dashboard__header">
+    <h1 class="dashboard__title">Server Manager</h1>
+    <span class="dashboard__subtitle">// minecraft infrastructure control</span>
+  </div>
+
+  <div class="panel">
+    <div class="panel__header">
+      <div class="panel__dot"></div>
+      <span class="panel__label">Deploy New Server</span>
+    </div>
+    <div class="panel__body">
+      <form class="create-form" action="/moderator/servers/create" method="POST">
+
+        <div class="field field--full">
+          <label class="field__label" for="name">Server Name</label>
+          <input class="field__input" type="text" id="name" name="name" placeholder="e.g. survival-1" required>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="port">Port</label>
+          <input class="field__input" type="number" id="port" name="port"
+                 placeholder="25565" min="1024" max="65535" required>
+          <span class="field__hint">Must be unique per server</span>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="memory">Memory</label>
+          <select class="field__select" id="memory" name="memory">
+            <option value="512M">512 MB</option>
+            <option value="1G">1 GB</option>
+            <option value="2G" selected>2 GB</option>
+            <option value="4G">4 GB</option>
+            <option value="8G">8 GB</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="version">MC Version</label>
+          <input class="field__input" type="text" id="version" name="version"
+                 placeholder="LATEST" value="LATEST">
+          <span class="field__hint">e.g. 1.21.1 or LATEST</span>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="type">Server Type</label>
+          <select class="field__select" id="type" name="type">
+            <option value="VANILLA">Vanilla</option>
+            <option value="PAPER">Paper</option>
+            <option value="SPIGOT">Spigot</option>
+            <option value="FORGE">Forge</option>
+            <option value="FABRIC">Fabric</option>
+            <option value="BUKKIT">Bukkit</option>
+          </select>
+        </div>
+
+        <div class="field field--full">
+          <button class="btn btn--primary btn--full" type="submit">
+            ⬡ Deploy Server
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <div class="panel panel--green">
+    <div class="panel__header">
+      <div class="panel__dot"></div>
+      <span class="panel__label">
+        Active Servers
+        <% if (servers && servers.length) { %>
+          &nbsp;(<%=servers.length%>)
+        <% } %>
+      </span>
+    </div>
+    <div class="panel__body">
+
+      <% if (servers && servers.length) { %>
+        <div class="server-list">
+          <% servers.forEach(function(server) { %>
+            <%
+              const id = (server._id && (server._id.toString ? server._id.toString() : server._id))
+                         || server.id || server.uuid || server.name;
+              const status   = server.dockerStatus || server.status || 'unknown';
+              const port     = server.port    || '—';
+              const memory   = server.memory  || '—';
+              const version  = server.version || '—';
+              const type     = server.type    || 'VANILLA';
+            %>
+            <div class="server-card" data-status="<%= status %>">
+
+              <div class="server-card__indicator"></div>
+
+              <div class="server-card__info">
+                <div class="server-card__name"><%= server.name || id %></div>
+                <div class="server-card__meta">
+                  <span>:<%= port %></span>
+                  <span><%= type %></span>
+                  <span><%= version %></span>
+                  <span><%= memory %></span>
+                </div>
+              </div>
+
+              <div class="server-card__actions">
+                <span class="server-card__status"><%= status %></span>
+
+                <form action="/moderator/servers/<%= id %>/start" method="POST">
+                  <button class="btn btn--start" type="submit">▶ Start</button>
+                </form>
+
+                <form action="/moderator/servers/<%= id %>/stop" method="POST">
+                  <button class="btn btn--stop" type="submit">■ Stop</button>
+                </form>
+
+                <form action="/moderator/servers/<%= id %>/delete" method="POST"
+                      onsubmit="return confirm('Permanently delete \'<%= (server.name||id) %>\'?')">
+                  <button class="btn btn--danger" type="submit">✕ Delete</button>
+                </form>
+              </div>
+
+            </div>
+          <% }) %>
+        </div>
+
+      <% } else { %>
+        <div class="empty">
+          <div class="empty__icon">⬡</div>
+          <p class="empty__text">No servers deployed yet</p>
+        </div>
+      <% } %>
+
+    </div>
+  </div>
+
+</div>

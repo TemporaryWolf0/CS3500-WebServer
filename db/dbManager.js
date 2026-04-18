@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 dotenv.config();
 
-const url = process.env.MONGO_URL || process.env.DATABASE_URL || "mongodb://localhost:27017";
+const url = process.env.MONGO_URL || process.env.MONGO_URI || process.env.DATABASE_URL || "mongodb://localhost:27017";
 const dbName = process.env.DB_NAME || "mcmanager";
 
 let client;
@@ -12,6 +12,7 @@ let db;
 
 async function connect() {
   if (!client) {
+    console.log('Mongo URL:', url);
     client = new MongoClient(url);
     await client.connect();
     db = client.db(dbName);
@@ -32,8 +33,7 @@ async function init() {
 }
 
 async function createServer(config) {
-  const database = await connect();
-  const doc = {
+  const database = await connect();  const doc = {
     ...config,
     status: "stopped",
     created_at: new Date()
@@ -42,13 +42,41 @@ async function createServer(config) {
   return res.insertedId.toString();
 }
 
+async function listServers() {
+  const database = await connect();
+  return database.collection("servers").find({}).toArray();
+}
+
+async function updateServerStatus(id, status) {
+  const database = await connect();
+  const _id = typeof id === "string" ? new ObjectId(id) : id;
+  return database.collection("servers").updateOne({ _id }, { $set: { status, updated_at: new Date() } });
+}
+
+async function deleteServer(id) {
+  const database = await connect();
+  const _id = typeof id === "string" ? new ObjectId(id) : id;
+  return database.collection("servers").deleteOne({ _id });
+}
+
 async function getServerConfig(id) {
   const database = await connect();
   const _id = typeof id === "string" ? new ObjectId(id) : id;
   return database.collection("servers").findOne({ _id });
 }
 
-// Create a user document with fields compatible with previous Mongoose model
+async function getServersByIds(serverIds) {
+  const database = await connect();
+  const objectIds = serverIds.map(id => typeof id === "string" ? new ObjectId(id) : id);
+  return database.collection("servers").find({ _id: { $in: objectIds } }).toArray();
+}
+
+async function updateServerConfig(id, fields) {
+  const database = await connect();
+  const _id = typeof id === "string" ? new ObjectId(id) : id;
+  return database.collection("servers").updateOne({ _id }, { $set: { ...fields, updated_at: new Date() } });
+}
+
 async function createUser({ name, email, phone = '', password, role = 'public', username }) {
   if (!name || !email || !password) throw new Error('name, email and password required');
   const database = await connect();
@@ -104,7 +132,6 @@ async function findUser(username, email) {
 async function addServerToUser(userId, serverId) {
   const database = await connect();
   const _id = typeof userId === "string" ? new ObjectId(userId) : userId;
-  // Ensure serverId is stored as string
   const sid = typeof serverId === "string" ? serverId : serverId.toString();
   await database.collection("users").updateOne({ _id }, { $addToSet: { serversGuid: sid } });
   return true;
@@ -137,5 +164,10 @@ export default {
   getUserList,
   findUser,
   removeUser,
-  updateUser
+  updateUser,
+  listServers,
+  updateServerStatus,
+  deleteServer,
+  getServersByIds,
+  updateServerConfig
 };

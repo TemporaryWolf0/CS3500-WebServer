@@ -13,6 +13,7 @@ dotenv.config();
 import pagesRouter from "./routes/PublicRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import authRouter from "./routes/authRoutes.js";
+import modRoutes from "./routes/modRoutes.js";
 import * as auth from './controllers/authController.js';
 
 
@@ -35,11 +36,9 @@ app.use(session({
   saveUninitialized: false
 }));
 
-// Passport.js setup for authentication
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Local strategy for username/password authentication
 passport.use(new LocalStrategy(async (username, password, done) => {
   const user = await db.getUserByUsername(username);
   if (!user) return done(null, false, { message: 'Incorrect username' });
@@ -47,15 +46,13 @@ passport.use(new LocalStrategy(async (username, password, done) => {
   if (!ok) return done(null, false, { message: 'Incorrect password' });
   return done(null, user);
 }));
-// Serialize user ID to session for login persistence
+
 passport.serializeUser((user, done) => done(null, user._id || user.id));
 passport.deserializeUser(async (id, done) => {
   const u = await db.getUserById(id);
   done(null, u || false);
 });
 
-// expose current user to views (used by templates)
-// Also expose navLinks to views so we can conditionally show/hide links based on role
 app.use((req, res, next) => {
   res.locals.currentUser = req.user || null;
 
@@ -66,7 +63,7 @@ app.use((req, res, next) => {
     { name: "register", path: "/pages/register", key: "register", css: "NA" }
   ],
   moderator: [
-    { name: "Moderation", path: "/pages/moderation", key: "moderation", css: "NA" }
+    { name: "Server Dashboard", path: "/moderator/server-dashboard", key: "server-dashboard", css: "NA" }
   ],
   admin: [
     { name: "Admin Panel", path: "/admin", key: "admin", css: "NA" },
@@ -82,14 +79,13 @@ app.use((req, res, next) => {
 app.use("/pages", pagesRouter);
 app.use("/auth", authRouter);
 app.use("/admin", adminRoutes);
+app.use('/moderator', modRoutes);
 app.get("/", (req, res) => res.redirect("/pages/dashboard"));
 
-// initialize database (creates collections/indexes) and perform startup tasks
 (async () => {
   try {
     await db.init();
 
-    // If admin creds provided via env, ensure an admin user exists using auth controller
     const adminUser = process.env.ADMIN_USERNAME || process.env.ADMIN_USER;
     const adminPass = process.env.ADMIN_PASSWORD || process.env.ADMIN_PASS;
     const adminEmail = process.env.ADMIN_EMAIL;
@@ -106,7 +102,6 @@ app.get("/", (req, res) => res.redirect("/pages/dashboard"));
         console.warn('authController.ensureAdmin not available');
       }
     }
-
     app.listen(PORT, () => {
       console.log(`Server Started on http://localhost:${PORT}`);
     });
