@@ -7,7 +7,7 @@ services:
       - ..:/workspace:cached
       - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /workspace
-    command: bash -lc 'export MONGO_URL="mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@db:27017/${MONGO_INITDB_DATABASE}?authSource=admin"  && node --inspect=0.0.0.0:9229 server.js'
+    command: bash -lc 'npm install && export MONGO_URL="mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@db:27017/${MONGO_INITDB_DATABASE}?authSource=admin"  && npx nodemon --inspect=0.0.0.0:9229 --ext js,ejs server.js'
     restart: unless-stopped
     ports:
       - "9229:9229"

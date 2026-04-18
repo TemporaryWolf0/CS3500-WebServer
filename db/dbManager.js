@@ -169,5 +169,6 @@ export default {
   updateServerStatus,
   deleteServer,
   getServersByIds,
-  updateServerConfig
+  updateServerConfig,
+  addServerToUser
 };

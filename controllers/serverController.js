@@ -1,4 +1,4 @@
-import dbManager from "../db/dbManager.js";
+import db from "../db/dbManager.js";
 import Dockerode from "dockerode";
 
 const docker = new Dockerode();
