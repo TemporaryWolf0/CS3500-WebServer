@@ -1,4 +1,3 @@
-// controllers/authController.js (ESM)
 import db from '../db/dbManager.js';
 import bcrypt from 'bcryptjs';
 import passport from 'passport';
@@ -6,47 +5,43 @@ import passport from 'passport';
 export const getLogin = (req, res) => {
   const msg = req.session && req.session.messages;
   if (req.session) delete req.session.messages;
-  res.render('pages/login', { message: msg ? msg[0] : null });
+  res.render('/pages/dashboard', { message: msg ? msg[0] : null });
 };
 
 export const postLogin = (req, res, next) =>
   passport.authenticate('local', {
     successRedirect: '/pages/dashboard',
-    failureRedirect: '/pages/login',
+    failureRedirect: '/pages/dashboard',
     failureMessage: true
   })(req, res, next);
 
 export const getRegister = (req, res) => {
-  res.render('pages/register');
+  res.render('/pages/dashboard');
 };
 
 export const postRegister = async (req, res) => {
   try {
     const { name, email, phone, password, role } = req.body;
-    // Make sure user doesn’t already exist
     let user = await db.getUserByEmail(email);
     if (user) {
       req.flash('error', 'User already exists');
-      return res.redirect('/register');
+      return res.redirect('/pages/dashboard');
     }
-
-    // Create new user (hashing handled by dbManager)
     await db.createUser({ name, email, phone, password, role });
-    res.redirect('/pages/login');
+    res.redirect('/pages/dashboard');
   } catch (error) {
     console.error(error);
-    res.redirect('/pages/register');
+    res.redirect('/pages/dashboard');
   }
 };
 
 export const logout = (req, res, next) => {
   req.logout((err) => {
     if (err) { return next(err); }
-    res.redirect('/pages/login');
+    res.redirect('/pages/dashboard');
   });
 };
 
-// Programmatic helper: create a user (returns created user or null if exists)
 export async function createUserProgrammatic({ name, email, phone = '', password, role = 'public' }) {
   if (!email || !password || !name) throw new Error('name, email and password required');
   const existingByEmail = await db.getUserByEmail(email);
@@ -56,7 +51,6 @@ export async function createUserProgrammatic({ name, email, phone = '', password
   return created;
 }
 
-// Ensure an admin user exists (checks by username or email)
 export async function ensureAdmin({ username, password, email }) {
   if (!username || !password) throw new Error('username and password required');
   const existingByUsername = await db.getUserByUsername(username);

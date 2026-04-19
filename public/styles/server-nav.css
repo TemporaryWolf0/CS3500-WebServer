@@ -1,0 +1,151 @@
+:root {
+  --sidenav-width: 180px;
+}
+
+.server-layout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  width: 100%;
+  overflow: hidden;
+  height: 100%;
+}
+
+.server-sidenav {
+  width: var(--sidenav-width);
+  background-color: #222;
+  display: flex;
+  flex-direction: column;
+}
+
+.server-sidenav .nav-heading {
+  padding: 12px 14px 8px;
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.server-sidenav .nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  color: #ccc;
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  font-size: 13px;
+  transition: background 0.15s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.server-sidenav .nav-item:hover {
+  background: #2e2e2e;
+  color: white;
+}
+
+.server-sidenav .nav-item.active {
+  background: #2a2a2a;
+  color: white;
+  border-left-color: #04AA6D;
+}
+
+.server-sidenav .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.server-sidenav .status-dot--running  { background-color: #04AA6D; }
+.server-sidenav .status-dot--stopped  { background-color: #c0392b; }
+.server-sidenav .status-dot--unknown,
+.server-sidenav .status-dot--starting { background-color: #888; }
+
+.server-sidenav .new-server-btn {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  color: #04AA6D;
+  text-decoration: none;
+  border-top: 0.5px solid #333;
+  font-size: 13px;
+}
+
+.new-server-btn:hover {
+  background: #1a2e24;
+}
+
+.new-server-btn .btn-plus {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #04AA6D;
+  border-radius: 50%;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.server-main {
+  padding: 24px;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.sidenav-toggle {
+  display: none;
+  width: auto;
+  background: #222;
+  border: none;
+  color: #ccc;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.sidenav-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99;
+}
+
+.sidenav-overlay.open {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --sidenav-width: 220px;
+  }
+
+  .server-layout {
+    grid-template-columns: 1fr;
+    position: relative;
+  }
+
+  .server-sidenav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .server-sidenav.open {
+    transform: translateX(0);
+  }
+
+  .sidenav-toggle {
+    display: block;
+  }
+}

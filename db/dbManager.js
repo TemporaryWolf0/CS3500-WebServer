@@ -1,10 +1,9 @@
 import { MongoClient, ObjectId } from "mongodb";
-import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 
-dotenv.config();
 
-const url = process.env.MONGO_URL || process.env.MONGO_URI || process.env.DATABASE_URL || "mongodb://localhost:27017";
+const url = process.env.MONGO_URL;
+if (!url) throw new Error("MONGO_URL is not set - check your environment variables");
 const dbName = process.env.DB_NAME || "mcmanager";
 
 let client;

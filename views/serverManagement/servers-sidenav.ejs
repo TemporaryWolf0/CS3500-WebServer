@@ -1,0 +1,18 @@
+<link href="/styles/server-nav.css" rel="stylesheet"/>
+<div class="nav-heading">Servers</div>
+
+<% servers.forEach(function(server) {
+  const id = server.id;
+  const status = server.status || 'unknown';
+  const active = currentServerId === id.toString() ? 'active' : '';
+%>
+  <a class="nav-item <%= active %>" href="/servers/serverManagement/<%= id %>">
+    <div class="status-dot status-dot--<%= status %>"></div>
+    <span><%= server.name %></span>
+  </a>
+<% }) %>
+
+<a class="new-server-btn" href="/servers/serverManagement/new">
+  <div class="btn-plus">+</div>
+  <span>New server</span>
+</a>

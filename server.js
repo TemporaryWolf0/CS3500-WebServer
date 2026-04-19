@@ -2,18 +2,17 @@ import express from "express";
 import path from "path";
 import fs from "fs";
 import expressLayouts from "express-ejs-layouts";
-import dotenv from "dotenv";
 import db from "./db/dbManager.js";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from 'passport-local';
 
-dotenv.config();
+
 
 import pagesRouter from "./routes/PublicRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import authRouter from "./routes/authRoutes.js";
-import modRoutes from "./routes/modRoutes.js";
+import serverRoutes from "./routes/serverRoutes.js";
 import * as auth from './controllers/authController.js';
 
 
@@ -50,6 +49,9 @@ passport.use(new LocalStrategy(async (username, password, done) => {
 passport.serializeUser((user, done) => done(null, user._id || user.id));
 passport.deserializeUser(async (id, done) => {
   const u = await db.getUserById(id);
+  if (u) {
+    u.id = u._id.toString();
+  }
   done(null, u || false);
 });
 
@@ -58,15 +60,12 @@ app.use((req, res, next) => {
 
   res.locals.navLinks = {
   public: [
-    { name: "Dashboard", path: "/pages/dashboard", key: "dashboard", css: "NA" },
-    { name: "login", path: "/pages/login", key: "login", css: "NA" },
-    { name: "register", path: "/pages/register", key: "register", css: "NA" }
+    { name: "Dashboard", path: "/pages/dashboard", key: "dashboard", css: "NA" }
   ],
   moderator: [
-    { name: "Server Dashboard", path: "/moderator/server-dashboard", key: "server-dashboard", css: "NA" }
+    { name: "Server Manager", path: "/servers/server-manager", key: "server-manager", css: "NA" }
   ],
   admin: [
-    { name: "Admin Panel", path: "/admin", key: "admin", css: "NA" },
     { name: "User Management", path: "/admin/user-management", key: "user-management", css: "NA" }
   ]
   
@@ -75,11 +74,10 @@ app.use((req, res, next) => {
   next();
 });
 
-
 app.use("/pages", pagesRouter);
 app.use("/auth", authRouter);
 app.use("/admin", adminRoutes);
-app.use('/moderator', modRoutes);
+app.use('/servers', serverRoutes);
 app.get("/", (req, res) => res.redirect("/pages/dashboard"));
 
 (async () => {

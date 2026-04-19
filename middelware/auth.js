@@ -2,14 +2,14 @@ exports.ensureAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/login');
+  res.redirect('/pages/dashboard');
 };
 exports.ensureAdmin = (req, res, next) => {
   if (req.isAuthenticated() && req.user.role === 'admin') {
     return next();
   }
 
-  res.redirect('/dashboard');
+  res.redirect('/pages/dashboard');
 };
 
 module.exports.isAdmin = (req, res, next) => {
@@ -24,6 +24,6 @@ module.exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   } else {
-    res.redirect('/login');
+    res.redirect('/pages/dashboard');
   }
 };

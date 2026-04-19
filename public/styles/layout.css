@@ -1,17 +1,22 @@
 body {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
   margin: 0;
-  padding: 0;
 }
 
 h2, p {
   margin: 10px;
 }
 
-.site-nav{
-  overflow: hidden;
+.site-nav {
   background-color: #333333;
+  font-size: large;
+  position: relative; 
 }
-
+.desktop-links {
+  overflow: hidden;
+}
 .site-nav a {
   float: left;
   color: white;
@@ -28,9 +33,68 @@ h2, p {
   background-color: #04AA6D;
 }
 
-/* Create a right-aligned (split) link inside the navigation bar */
 .site-nav a.split {
   float: right;
   background-color: #007bfff4;
   color: white;
+}
+
+.site-nav .hamburger {
+  display: none;
+  float: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.site-nav .hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: white;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.site-nav .mobile-menu {
+  display: none;
+  background-color: #333333;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.site-nav .mobile-menu a {
+  float: none;
+  display: block;
+  text-align: left;
+  padding: 14px 16px;
+}
+
+.site-nav .mobile-menu.open {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .site-nav .desktop-links {
+    display: none;
+  }
+
+  .site-nav a.split {
+    display: none;
+  }
+
+  .site-nav .hamburger {
+    display: flex; 
+  }
+}
+
+.main-container {
+  display: flex;
+  overflow: hidden;
 }

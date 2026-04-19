@@ -4,43 +4,106 @@
   <meta charset="UTF-8">
   <title><%= title %></title>
   <link href="/styles/layout.css" rel="stylesheet"/>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-  <div class="site-nav">
+  <nav class="site-nav">
+
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="desktop-links">
       <% navLinks.public.forEach(link => { %>
-          <a href="<%= link.path %>" class="<%= active === link.key ? 'active' : '' %>">
-            <%= link.name %>
-          </a>
+        <a href="<%= link.path %>" class="<%= active === link.key ? 'active' : '' %>">
+          <%= link.name %>
+        </a>
       <% }) %>
 
       <% navLinks.moderator.forEach(link => { %>
-          <% if (currentUser && currentUser.role !== 'public') { %>
+        <% if (currentUser && currentUser.role !== 'public') { %>
           <a href="<%= link.path %>" class="<%= active === link.key ? 'active' : '' %>">
             <%= link.name %>
           </a>
-          <% } %>
+        <% } %>
       <% }) %>
+
       <% navLinks.admin.forEach(link => { %>
-          <% if (currentUser && currentUser.role === 'admin') { %>
+        <% if (currentUser && currentUser.role === 'admin') { %>
           <a href="<%= link.path %>" class="<%= active === link.key ? 'active' : '' %>">
             <%= link.name %>
           </a>
-          <% } %>
+        <% } %>
       <% }) %>
 
       <% if (currentUser) { %>
-          <a href="/pages/profile" class="split"><%= currentUser.username %></a>
-          
+        <a onclick="document.getElementById('profileModal').style.display='block'" class="split">
+          <%= currentUser.username %>
+        </a>
       <% } else { %>
-          <a href="/pages/login" class="split">Login</a>
+        <a class="split" onclick="document.getElementById('loginModal').style.display='block'">Login</a>
       <% } %>
-  </div>
+    </div>
 
+    <div class="mobile-menu" id="mobile-menu">
+      <% navLinks.public.forEach(link => { %>
+        <a href="<%= link.path %>" class="<%= active === link.key ? 'active' : '' %>">
+          <%= link.name %>
+        </a>
+      <% }) %>
 
-    <main class="main-container">
+      <% navLinks.moderator.forEach(link => { %>
+        <% if (currentUser && currentUser.role !== 'public') { %>
+          <a href="<%= link.path %>" class="<%= active === link.key ? 'active' : '' %>">
+            <%= link.name %>
+          </a>
+        <% } %>
+      <% }) %>
+
+      <% navLinks.admin.forEach(link => { %>
+        <% if (currentUser && currentUser.role === 'admin') { %>
+          <a href="<%= link.path %>" class="<%= active === link.key ? 'active' : '' %>">
+            <%= link.name %>
+          </a>
+        <% } %>
+      <% }) %>
+
+      <% if (currentUser) { %>
+        <a onclick="document.getElementById('profileModal').style.display='block'">
+          <%= currentUser.username %>
+        </a>
+      <% } else { %>
+        <a onclick="document.getElementById('loginModal').style.display='block'">Login</a>
+      <% } %>
+    </div>
+
+  </nav>
+
+  <main class="main-container">
     <%- include(content) %>
+    <% if (currentUser) { %>
+      <%- include("modals/profile.ejs") %>
+    <% } else { %>
+      <%- include("modals/login.ejs") %>
+    <% } %>
   </main>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+      });
+    });
+  </script>
+
 </body>
 </html>
-

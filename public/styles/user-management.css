@@ -1,16 +1,14 @@
-/* Page container */
+
 .user-management-container {
   padding: 20px;
   font-family: Arial, sans-serif;
 }
 
-/* Section titles */
 .user-management-container h2 {
   margin-top: 20px;
   margin-bottom: 10px;
 }
 
-/* Add User Form */
 .add-user-box {
   background: #f2f2f2;
   padding: 15px;
@@ -48,7 +46,6 @@
   background-color: #038e5c;
 }
 
-/* User Table */
 .user-table {
   width: 100%;
   border-collapse: collapse;
@@ -70,7 +67,6 @@
   background-color: #f9f9f9;
 }
 
-/* Inline forms for actions */
 .inline-form {
   display: inline-block;
   margin-right: 8px;
@@ -89,7 +85,6 @@
   cursor: pointer;
 }
 
-/* Update button */
 .inline-form .update-btn {
   background-color: #007bff;
   color: white;
@@ -99,7 +94,6 @@
   background-color: #0066d1;
 }
 
-/* Delete button */
 .inline-form .delete-btn {
   background-color: #d9534f;
   color: white;

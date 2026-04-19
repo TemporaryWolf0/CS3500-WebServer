@@ -25,7 +25,7 @@ export async function createServer(userId, config) {
 
 
   await docker.createContainer({
-    Image: "itzg/minecraft-server",
+    Image: `itzg/minecraft-server`,
     name: containerName(serverId),
     Env: [
       "EULA=TRUE",
@@ -41,6 +41,7 @@ export async function createServer(userId, config) {
       Binds: [`mc_data_${serverId}:/data`],
     },
   });
+
 
   await db.addServerToUser(userId, serverId);
 

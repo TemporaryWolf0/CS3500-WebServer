@@ -1,0 +1,81 @@
+
+
+form input[type=text],
+form input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: inherit;
+  transition: border-color 0.2s;
+}
+
+form input[type=text]:focus,
+form input[type=password]:focus {
+  border-color: #04AA6D;
+  outline: none;
+}
+
+.profile-img {
+  width : 40%;
+  border-radius: 50%;
+}
+.profile-imgContainer {
+  text-align: center;
+  margin-bottom: 20px;
+}
+form label {
+  display: block;
+  margin-top: 12px;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.btn {
+  padding: 14px 20px;
+  margin-top: 16px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-alt { 
+  padding:8px 12px;
+  background-color:#eee; 
+  border-radius:4px; 
+  text-decoration:none; 
+  color:white;
+ }
+.btn-good {
+  background-color: #04AA6D;
+}
+.btn-danger {
+  background-color: #f44336;
+}
+.btn-neutral {
+  background-color: rgb(53, 134, 255);
+}
+.btn-full {
+  width: 100%;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+.btn-actions { 
+  display:flex;
+  gap:12px;
+  margin-top:16px;
+  align-items:center;
+}
+h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.4rem;
+}
