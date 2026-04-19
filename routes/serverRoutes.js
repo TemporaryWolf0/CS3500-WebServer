@@ -20,9 +20,27 @@ router.get("/server-manager", async (req, res) => {
     res.render("layout", {
       title: "Server Manager",
       active: "server-manager",
-      content: "serverManagement/server-manager.ejs",
+      content: "serverManagement/servers-layout.ejs",
       servers,
-      currentServerId: ""
+      currentServerId: "",
+      isNew: false
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("Error loading servers");
+  }
+});
+
+router.get("/server-manager/new", async (req, res) => {
+  try {
+    const servers = await serverController.getUserServers(req.user.id);
+    res.render("layout", {
+      title: "Server Manager",
+      active: "server-manager",
+      content: "serverManagement/servers-layout.ejs",
+      servers,
+      currentServerId: "",
+      isNew: true
     });
   } catch (e) {
     console.error(e);
@@ -36,9 +54,10 @@ router.get("/server-manager/:id", async (req, res) => {
     res.render("layout", {
       title: "Server Manager",
       active: "server-manager",
-      content: "serverManagement/server-manager.ejs",
+      content: "serverManagement/servers-layout.ejs",
       servers,
-      currentServerId: + req.params.id
+      currentServerId: req.params.id,
+      isNew: false
     });
   } catch (e) {
     console.error(e);

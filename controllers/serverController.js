@@ -98,7 +98,7 @@ export async function getUserServers(userId) {
       } catch (e) {
         dockerStatus = "not_found";
       }
-      return { ...server, dockerStatus };
+      return { ...server, id: server._id.toString(),status: dockerStatus };
     })
   );
 }

@@ -1,0 +1,26 @@
+<link href="/styles/server-nav.css" rel="stylesheet"/>
+<link href="/styles/form.css" rel="stylesheet"/>
+<link href="/styles/server-manager.css" rel="stylesheet"/>
+
+<div class="sidenav-overlay" id="sidenavOverlay" onclick="toggleSidenav()"></div>
+<button class="sidenav-toggle" id="sidenavToggle" onclick="toggleSidenav()">&#8250;</button>
+<div class="server-layout">
+  <div class="server-sidenav" id="serverSidenav">
+    <%- include('servers-sidenav.ejs', { servers, currentServerId }) %>
+  </div>
+  <main class="server-main">
+    <% if (currentServerId || isNew) { %>
+      <%- include('server-manager.ejs', { servers, currentServerId, isNew }) %>
+    <% } %>
+  </main>
+</div>
+
+<script>
+  function toggleSidenav() {
+    const nav = document.getElementById('serverSidenav');
+    const overlay = document.getElementById('sidenavOverlay');
+    if (!nav) return;
+    nav.classList.toggle('open');
+    overlay.classList.toggle('open');
+  }
+</script>

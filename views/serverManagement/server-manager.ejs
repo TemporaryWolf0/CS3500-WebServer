@@ -1,22 +1,59 @@
-<link href="/styles/server-nav.css" rel="stylesheet"/>
-
-<div class="sidenav-overlay" id="sidenavOverlay" onclick="toggleSidenav()"></div>
-<button class="sidenav-toggle" onclick="toggleSidenav()">&#8250;</button>
-
-<div class="server-layout">
-  <div class="server-sidenav" id="serverSidenav">
-        <%- include('servers-sidenav.ejs', { servers, currentServerId }) %>
-  </div>
-  <main class="server-main">
-  </main>
-</div>
-
-<script>
-  function toggleSidenav() {
-    const nav = document.getElementById('serverSidenav');
-    const overlay = document.getElementById('sidenavOverlay');
-    if (!nav) return;
-    nav.classList.toggle('open');
-    overlay.classList.toggle('open');
-  }
-</script>
+<% if (isNew) { %>
+  <h2 class="sm-heading">New Server</h2>
+  <form class="sm-form" method="POST" action="/servers/create">
+    <label>Name</label>
+    <input type="text" name="name" required>
+    <label>Port</label>
+    <input type="text" name="port" required>
+    <label>Memory</label>
+    <input type="text" name="memory" placeholder="2G">
+    <label>Version</label>
+    <input type="text" name="version" placeholder="LATEST">
+    <label>Type</label>
+    <input type="text" name="type" placeholder="VANILLA">
+    <button class="btn btn-neutral" type="submit">Save</button>
+  </form>
+<% } else { %>
+  <% const server = servers.find(s => s.id.toString() === currentServerId.toString()); %>
+  <% if (server) { %>
+    <% const status = server.status || 'unknown'; %>
+    <h2 class="sm-heading"><%= server.name %></h2>
+    <div class="sm-status">
+      <div class="status-dot status-dot--<%= status %>"></div>
+      <span><%= status %></span>
+    </div>
+    <div class="sm-info">
+      <div>
+        <span class="sm-info-label">Port</span>
+        <span class="sm-info-value"><%= server.port %></span>
+      </div>
+      <div>
+        <span class="sm-info-label">Memory</span>
+        <span class="sm-info-value"><%= server.memory %></span>
+      </div>
+      <div>
+        <span class="sm-info-label">Version</span>
+        <span class="sm-info-value"><%= server.version %></span>
+      </div>
+      <div>
+        <span class="sm-info-label">Type</span>
+        <span class="sm-info-value"><%= server.type %></span>
+      </div>
+    </div>
+    <div class="sm-actions">
+      <form method="POST" action="/servers/<%= server.id %>/start">
+        <button class="btn btn-good" type="submit">Start</button>
+      </form>
+    </div>
+    <div class="sm-actions sm-actions--destructive">
+      <form method="POST" action="/servers/<%= server.id %>/stop">
+        <button class="btn btn-danger" type="submit">Stop</button>
+      </form>
+      <form method="POST" action="/servers/<%= server.id %>/delete">
+        <button class="btn btn-danger" type="submit">Delete</button>
+      </form>
+    </div>
+  <% } else { %>
+    <p>Server not found.</p>
+  <% } %>
+<% } %>
