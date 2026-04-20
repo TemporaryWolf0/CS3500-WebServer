@@ -72,6 +72,11 @@ async function getServersByIds(serverIds) {
   return database.collection("servers").find({ _id: { $in: objectIds } }).toArray();
 }
 
+async function getAllServers() {
+  const database = await connect();
+  return database.collection("servers").find({}).toArray();
+}
+
 async function updateServerConfig(id, fields) {
   const database = await connect();
   const _id = typeof id === "string" ? new ObjectId(id) : id;
@@ -171,5 +176,6 @@ export default {
   deleteServer,
   getServersByIds,
   updateServerConfig,
-  addServerToUser
+  addServerToUser,
+  getAllServers
 };

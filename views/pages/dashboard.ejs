@@ -1,0 +1,57 @@
+<%
+  function ringColor(pct) {
+    if (pct >= 85) return '#D85A30';
+    if (pct >= 60) return '#EF9F27';
+    return '#1D9E75';
+  }
+
+  function fmtBytes(bytes) {
+    if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(1) + ' GB';
+    if (bytes >= 1048576)    return (bytes / 1048576).toFixed(1) + ' MB';
+    return (bytes / 1024).toFixed(1) + ' KB';
+  }
+%>
+
+<p class="section-title">Host machine</p>
+<div class="card card-host">
+  <div class="host-rings">
+    <div>
+        <div class="ring-item">
+        <div class="ring">
+          <div class="ring-hole">
+            <span class="ring-label"><%= parseFloat(hostStats.cpu.percent).toFixed(0) %>%</span>
+          </div>
+        </div>
+        <span>CPU</span>
+      </div>
+    </div>
+    <div>
+        <div class="ring-item">
+        <div class="ring">
+          <div class="ring-hole">
+            <span class="ring-label"><%= parseFloat(hostStats.memory.percent).toFixed(0) %>%</span>
+          </div>
+        </div>
+        <span>Memory</span>
+      </div>
+    </div>
+
+    <div class="host-meta">
+      <div>
+        <p class="meta-label">Memory used</p>
+        <p class="meta-val"><%= fmtBytes(hostStats.memory.used) %> / <%= fmtBytes(hostStats.memory.total) %></p>
+      </div>
+      <% if (hostStats.network && hostStats.network[0]) { %>
+      <div>
+        <p class="meta-label">Network in / out</p>
+        <p class="meta-val"><%= fmtBytes(hostStats.network[0].rxSec) %>/s &nbsp;/&nbsp; <%= fmtBytes(hostStats.network[0].txSec) %>/s</p>
+      </div>
+      <% } %>
+      <div>
+        <p class="meta-label">Processes</p>
+        <p class="meta-val"><%= hostStats.processes.running %> running</p>
+      </div>
+    </div>
+
+  </div>
+</div>

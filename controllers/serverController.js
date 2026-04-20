@@ -1,3 +1,4 @@
+import { stat } from "fs";
 import db from "../db/dbManager.js";
 import Dockerode from "dockerode";
 
@@ -101,6 +102,46 @@ export async function getUserServers(userId) {
       return { ...server, id: server._id.toString(),status: dockerStatus };
     })
   );
+}
+
+export async function getAllServers() {
+
+  const servers = await db.getAllServers();
+
+  return Promise.all(
+    servers.map(async (server) => {
+      let dockerStatus = "unknown";
+      try {
+        const container = await getContainer(server._id.toString());
+        const info = await container.inspect();
+        dockerStatus = info.State.Status; 
+      } catch (e) {
+        dockerStatus = "not_found";
+      }
+      return { ...server, id: server._id.toString(),status: dockerStatus };
+    })
+  );
+}
+
+export async function getAllStatistics() {
+  const servers = await getAllServers();
+  const runningServers = servers.filter(s => s.status === "running");
+  runningServers.forEach(s => {
+    getServerStatistics(s._id.toString()).then(stats => {
+      s.stats = stats;
+    }).catch(e => {
+      console.error(`Failed to fetch stats for server ${s._id.toString()}`, e);
+    });
+  });
+  const stoppedServers = servers.filter(s => s.status !== "running");
+  
+  return {};
+}
+export async function getServerStatistics(serverId) {
+
+  const container = await getContainer(serverId);
+  const stats = await container.stats({ stream: false });
+  return stats;
 }
 
 async function assertOwnership(userId, serverId) {
