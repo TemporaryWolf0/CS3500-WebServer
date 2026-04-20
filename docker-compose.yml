@@ -1,0 +1,40 @@
+
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/javascript-node:20
+    container_name: mc-manager-app
+    volumes:
+      - ..:/workspace:cached
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /workspace
+    command: bash -lc 'npm install && export MONGO_URL="mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@db:27017/${MONGO_INITDB_DATABASE}?authSource=admin"  && npx nodemon --inspect=0.0.0.0:9229 --ext js,ejs server.js'
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    networks:
+      - mcnet
+
+  db:
+    image: mongo:7.0.15
+    container_name: mc-manager-db
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "41017:27017"
+    volumes:
+      - dbdata:/data
+      - ../db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+    networks:
+      - mcnet
+
+networks:
+  mcnet:
+
+volumes:
+  dbdata:
