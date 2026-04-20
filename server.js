@@ -6,8 +6,8 @@ import db from "./db/dbManager.js";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from 'passport-local';
-
-
+import https from "https";
+import http from "http";
 
 import pagesRouter from "./routes/PublicRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -80,29 +80,51 @@ app.use("/admin", adminRoutes);
 app.use('/servers', serverRoutes);
 app.get("/", (req, res) => res.redirect("/pages/dashboard"));
 
+app.get("/", (req, res) => res.redirect("/pages/dashboard"));
+
 (async () => {
   try {
     await db.init();
 
-    const adminUser = process.env.ADMIN_USERNAME || process.env.ADMIN_USER;
-    const adminPass = process.env.ADMIN_PASSWORD || process.env.ADMIN_PASS;
+    const adminUser  = process.env.ADMIN_USERNAME || process.env.ADMIN_USER;
+    const adminPass  = process.env.ADMIN_PASSWORD || process.env.ADMIN_PASS;
     const adminEmail = process.env.ADMIN_EMAIL;
-    if (adminUser && adminPass) {
-      if (typeof auth.ensureAdmin === 'function') {
-        try {
-          const res = await auth.ensureAdmin({ username: adminUser, password: adminPass, email: adminEmail });
-          if (res && res.created) console.log('Created admin user:', res.user._id || res.user.id);
-          else console.log('Admin user already exists:', res.user._id || res.user.id);
-        } catch (e) {
-          console.error('Error ensuring admin user exists via authController', e);
-        }
-      } else {
-        console.warn('authController.ensureAdmin not available');
+
+    if (adminUser && adminPass && typeof auth.ensureAdmin === 'function') {
+      try {
+        const result = await auth.ensureAdmin({ username: adminUser, password: adminPass, email: adminEmail });
+        if (result?.created) console.log('Created admin user:', result.user._id);
+        else console.log('Admin user already exists:', result.user._id);
+      } catch (e) {
+        console.error('Error ensuring admin user:', e);
       }
     }
-    app.listen(PORT, () => {
-      console.log(`Server Started on http://localhost:${PORT}`);
-    });
+
+    // load SSL certs
+    const sslKeyPath  = process.env.SSL_KEY  || './certs/key.pem';
+    const sslCertPath = process.env.SSL_CERT || './certs/cert.pem';
+
+    if (fs.existsSync(sslKeyPath) && fs.existsSync(sslCertPath)) {
+      const sslOptions = {
+        key:  fs.readFileSync(sslKeyPath),
+        cert: fs.readFileSync(sslCertPath),
+      };
+
+      http.createServer(app).listen(PORT_HTTP, () => {
+        console.log(`HTTP redirect listening on port ${PORT_HTTP}`);
+      });
+
+      https.createServer(sslOptions, app).listen(PORT, () => {
+        console.log(`HTTPS server started on https://localhost:${PORT}`);
+      });
+
+    } else {
+      console.warn('SSL certs not found, falling back to HTTP');
+      app.listen(PORT, () => {
+        console.log(`HTTP server started on http://localhost:${PORT}`);
+      });
+    }
+
   } catch (err) {
     console.error('Startup error', err);
     process.exit(1);
