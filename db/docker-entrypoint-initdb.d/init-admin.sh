@@ -45,7 +45,7 @@ if [ ${#missing[@]} -ne 0 ]; then
 fi
 
 # Use root credentials created by the image to authenticate and insert app admin user
-mongo "$MONGO_INITDB_DATABASE" -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase "admin" <<EOF
+mongosh "$MONGO_INITDB_DATABASE" -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase "admin" <<EOF
 var db = db.getSiblingDB("$MONGO_INITDB_DATABASE");
 if (!db.users.findOne({username: "$ADMIN_USERNAME"})) {
   db.users.insertOne({
