@@ -42,35 +42,31 @@
     </thead>
 
     <tbody>
-      <% users.forEach(user => { %>
-        <tr>
-          <td><%= user.name %></td>
-          <td><%= user.username %></td>
-          <td><%= user.email %></td>
-          <td><%= user.role %></td>
-
-          <td>
-            <form class="inline-form" action="user-management/update-user" method="POST">
-              <input type="hidden" name="username" value="<%= user.username %>">
-
-              <select name="role">
-                <option value="public" <%= user.role === "public" ? "selected" : "" %>>Public</option>
-                <option value="moderator" <%= user.role === "moderator" ? "selected" : "" %>>Moderator</option>
-                <option value="admin" <%= user.role === "admin" ? "selected" : "" %>>Admin</option>
-              </select>
-
-              <button class="update-btn" type="submit">Update</button>
-            </form>
-
-            <form class="inline-form" action="user-management/remove-user" method="POST">
-              <input type="hidden" name="username" value="<%= user.username %>">
-              <input type="hidden" name="userId" value="<%= user._id %>">
-              <button class="delete-btn" type="submit">Remove</button>
-            </form>
-          </td>
-        </tr>
-      <% }) %>
-    </tbody>
+  <% users.forEach(user => { %>
+    <tr>
+      <td data-label="Name"><%= user.name %></td>
+      <td data-label="Username"><%= user.username %></td>
+      <td data-label="Email"><%= user.email %></td>
+      <td data-label="Role"><%= user.role %></td>
+      <td data-label="Actions">
+        <form class="inline-form" action="user-management/update-user" method="POST">
+          <input type="hidden" name="username" value="<%= user.username %>">
+          <select name="role">
+            <option value="public" <%= user.role === "public" ? "selected" : "" %>>Public</option>
+            <option value="moderator" <%= user.role === "moderator" ? "selected" : "" %>>Moderator</option>
+            <option value="admin" <%= user.role === "admin" ? "selected" : "" %>>Admin</option>
+          </select>
+          <button class="update-btn" type="submit">Update</button>
+        </form>
+        <form class="inline-form" action="user-management/remove-user" method="POST">
+          <input type="hidden" name="username" value="<%= user.username %>">
+          <input type="hidden" name="userId" value="<%= user._id %>">
+          <button class="delete-btn" type="submit">Remove</button>
+        </form>
+      </td>
+    </tr>
+  <% }) %>
+</tbody>
   </table>
 
 </div>

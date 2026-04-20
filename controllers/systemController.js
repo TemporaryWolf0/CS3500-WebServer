@@ -11,16 +11,16 @@ export async function getHostStats() {
 
   return {
     cpu: {
-      percent: cpu.currentLoad.toFixed(2),
+      percent: Math.round(cpu.currentLoad),
       cores: cpu.cpus.map(c => ({
-        percent: c.load.toFixed(2),
+        percent: Math.round(c.load),
       })),
     },
     memory: {
       total: mem.total,
       used: mem.used,
       free: mem.free,
-      percent: ((mem.used / mem.total) * 100).toFixed(2),
+      percent: Math.round((mem.used / mem.total) * 100),
     },
     network: network.map(iface => ({
       interface: iface.iface,

@@ -14,7 +14,7 @@ async function getContainer(serverId) {
 }
 
 export async function createServer(userId, config) {
-
+  const user = await db.getUserById(userId);
   const serverId = await db.createServer({
     name: config.name,
     port: config.port,
@@ -33,6 +33,7 @@ export async function createServer(userId, config) {
       `MEMORY=${config.memory ?? "2G"}`,
       `VERSION=${config.version ?? "LATEST"}`,
       `TYPE=${config.type ?? "VANILLA"}`,
+      `OPS=${user.username ?? ""}`,
     ],
     ExposedPorts: { "25565/tcp": {} },
     HostConfig: {
@@ -135,7 +136,7 @@ export async function getAllStatistics() {
   });
   const stoppedServers = servers.filter(s => s.status !== "running");
   
-  return {};
+  return {runningCount: runningServers.length, totalCount: servers.length, servers: runningServers};
 }
 export async function getServerStatistics(serverId) {
 

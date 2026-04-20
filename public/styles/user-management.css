@@ -1,27 +1,33 @@
+* {
+  box-sizing: border-box;
+}
 
 .user-management-container {
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  padding: 1rem;
+  width: 100%;
 }
 
 .user-management-container h2 {
-  margin-top: 20px;
-  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 12px;
+  color: #333;
 }
 
 .add-user-box {
   background: #f2f2f2;
-  padding: 15px;
+  padding: 1rem;
   border-radius: 6px;
-  margin-bottom: 25px;
+  margin-bottom: 1.5rem;
   border: 1px solid #ccc;
-  max-width: 500px;
+  width: 100%;
 }
 
 .add-user-box label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
+  font-size: 13px;
 }
 
 .add-user-box input,
@@ -31,15 +37,18 @@
   margin-bottom: 12px;
   border: 1px solid #aaa;
   border-radius: 4px;
+  font-size: 14px;
 }
 
 .add-user-box button {
+  width: 100%;
   background-color: #04AA6D;
   color: white;
   padding: 10px 14px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .add-user-box button:hover {
@@ -50,55 +59,154 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
+  font-size: 13px;
 }
 
-.user-table th,
+.user-table thead {
+  display: none;
+}
+
+.user-table tr {
+  display: block;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  padding: 10px;
+  background: #fff;
+}
+
 .user-table td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
 }
 
-.user-table th {
-  background-color: #e6e6e6;
-  text-align: left;
+.user-table td:last-child {
+  border-bottom: none;
 }
 
-.user-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+.user-table td::before {
+  content: attr(data-label);
+  font-weight: bold;
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  flex-shrink: 0;
+  margin-right: 8px;
 }
 
 .inline-form {
   display: inline-block;
-  margin-right: 8px;
+  margin-right: 6px;
 }
 
 .inline-form select {
-  padding: 6px;
+  padding: 5px;
   border-radius: 4px;
   border: 1px solid #aaa;
+  font-size: 12px;
+  max-width: 100px;
 }
 
 .inline-form button {
-  padding: 6px 10px;
+  padding: 5px 8px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 12px;
 }
 
-.inline-form .update-btn {
+.update-btn {
   background-color: #007bff;
   color: white;
 }
 
-.inline-form .update-btn:hover {
+.update-btn:hover {
   background-color: #0066d1;
 }
 
-.inline-form .delete-btn {
+.delete-btn {
   background-color: #d9534f;
   color: white;
 }
 
-.inline-form .delete-btn:hover {
+.delete-btn:hover {
   background-color: #c64541;
+}
+
+@media (min-width: 768px) {
+  .user-management-container {
+    padding: 1.25rem;
+  }
+
+  .add-user-box {
+    max-width: 500px;
+  }
+
+  .add-user-box button {
+    width: auto;
+  }
+
+  .user-table thead {
+    display: table-header-group;
+  }
+
+  .user-table tr {
+    display: table-row;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  .user-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  .user-table td {
+    display: table-cell;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .user-table td::before {
+    display: none;
+  }
+
+  .user-table th {
+    background-color: #e6e6e6;
+    text-align: left;
+    padding: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .user-management-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .user-management-container h2 {
+    font-size: 18px;
+    margin: 20px 0 10px;
+  }
+
+  .user-table {
+    font-size: 14px;
+  }
+
+  .inline-form select {
+    font-size: 13px;
+  }
+
+  .inline-form button {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
 }

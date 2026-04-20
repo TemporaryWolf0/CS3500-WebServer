@@ -1,57 +1,66 @@
-<%
-  function ringColor(pct) {
-    if (pct >= 85) return '#D85A30';
-    if (pct >= 60) return '#EF9F27';
-    return '#1D9E75';
-  }
+<link rel="stylesheet" href="/styles/dashboard.css">
 
-  function fmtBytes(bytes) {
-    if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(1) + ' GB';
-    if (bytes >= 1048576)    return (bytes / 1048576).toFixed(1) + ' MB';
-    return (bytes / 1024).toFixed(1) + ' KB';
-  }
-%>
+<div class="dashboard">
 
-<p class="section-title">Host machine</p>
-<div class="card card-host">
-  <div class="host-rings">
-    <div>
-        <div class="ring-item">
-        <div class="ring">
-          <div class="ring-hole">
-            <span class="ring-label"><%= parseFloat(hostStats.cpu.percent).toFixed(0) %>%</span>
+  <div class="card">
+    <p class="section-title">Host</p>
+    <div class="host-body">
+
+      <div class="rings-container">
+        <% hostRings.forEach(r => { %>
+          <div class="ring-item">
+            <div class="ring-chart" style="--ring-percent:<%= r.pct %>;--ring-color:<%= r.color %>;">
+              <svg viewBox="-50 -50 100 100">
+                <circle cx="0" cy="0"/>
+                <circle cx="0" cy="0" class="ring-fill"/>
+              </svg>
+              <span class="ring-label"><%= r.pct %>%</span>
+            </div>
+            <span class="ring-item-label"><%= r.label %></span>
           </div>
-        </div>
-        <span>CPU</span>
+        <% }) %>
       </div>
-    </div>
-    <div>
-        <div class="ring-item">
-        <div class="ring">
-          <div class="ring-hole">
-            <span class="ring-label"><%= parseFloat(hostStats.memory.percent).toFixed(0) %>%</span>
+
+      <div class="host-meta">
+        <% hostMeta.forEach(m => { %>
+          <div class="meta-row">
+            <span class="meta-label"><%= m.label %></span>
+            <span class="meta-value"><%= m.value %></span>
           </div>
-        </div>
-        <span>Memory</span>
+        <% }) %>
       </div>
-    </div>
 
-    <div class="host-meta">
-      <div>
-        <p class="meta-label">Memory used</p>
-        <p class="meta-val"><%= fmtBytes(hostStats.memory.used) %> / <%= fmtBytes(hostStats.memory.total) %></p>
-      </div>
-      <% if (hostStats.network && hostStats.network[0]) { %>
-      <div>
-        <p class="meta-label">Network in / out</p>
-        <p class="meta-val"><%= fmtBytes(hostStats.network[0].rxSec) %>/s &nbsp;/&nbsp; <%= fmtBytes(hostStats.network[0].txSec) %>/s</p>
-      </div>
-      <% } %>
-      <div>
-        <p class="meta-label">Processes</p>
-        <p class="meta-val"><%= hostStats.processes.running %> running</p>
-      </div>
     </div>
-
   </div>
+
+  <div class="card">
+    <p class="section-title">Containers</p>
+    <div class="servers-row">
+
+      <div class="ring-item">
+        <div class="ring-chart" style="--ring-percent:<%= serverRing.pct %>;--ring-color:<%= serverRing.color %>;">
+          <svg viewBox="-50 -50 100 100">
+            <circle cx="0" cy="0"/>
+            <circle cx="0" cy="0" class="ring-fill"/>
+          </svg>
+          <div class="ring-label ring-label--stack">
+            <span class="ring-label-main"><%= serverRing.running %>/<%= serverRing.total %></span>
+          </div>
+        </div>
+        <span class="ring-item-label">Running</span>
+      </div>
+
+      <div class="server-list">
+        <% serversStats.servers.forEach(server => { %>
+          <div class="server-row">
+            <div class="server-dot"></div>
+            <span class="server-name"><%= server.name %></span>
+            <span class="server-status"><%= server.status %></span>
+          </div>
+        <% }) %>
+      </div>
+
+    </div>
+  </div>
+
 </div>
