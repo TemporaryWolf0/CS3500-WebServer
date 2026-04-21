@@ -26,7 +26,7 @@ export async function createServer(userId, config) {
 
 
   await docker.createContainer({
-    Image: `itzg/minecraft-server`,
+    Image: `itzg/minecraft-server:latest`,
     name: containerName(serverId),
     Env: [
       "EULA=TRUE",
