@@ -141,113 +141,26 @@ MONGO_INITDB_ROOT_PASSWORD=<strong-db-password>
 MONGO_INITDB_DATABASE=mcmanager
 ```
 
-### 2. Create a Production Docker Compose File
 
-Create a `docker-compose.prod.yml` in the project root:
 
-```yaml
-services:
-  app:
-    image: node:20
-    container_name: mc-manager-app
-    working_dir: /app
-    volumes:
-      - .:/app
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: sh -c "npm install --omit=dev && node server.js"
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
-    environment:
-      - MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@db:27017/${MONGO_INITDB_DATABASE}?authSource=admin
-    env_file:
-      - .env
-    networks:
-      - mcnet
-
-  db:
-    image: mongo:7.0.15
-    container_name: mc-manager-db
-    restart: unless-stopped
-    env_file:
-      - .env
-    ports:
-      - "27017:27017"
-    volumes:
-      - dbdata:/data/db
-      - ./db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
-    networks:
-      - mcnet
-
-networks:
-  mcnet:
-
-volumes:
-  dbdata:
-```
-
-### 3. Start the Application
+### 2. Start the Application
 
 ```bash
-docker compose -f docker-compose.prod.yml up -d
+docker compose up -d
 ```
 
 Check that both containers are running:
 
 ```bash
-docker compose -f docker-compose.prod.yml ps
+docker compose ps
 ```
 
 View logs:
 
 ```bash
-docker compose -f docker-compose.prod.yml logs -f app
+docker compose logs app
 ```
 
 The app will be available at `http://<your-server-ip>:3000`.
-
-### 4. (Optional) Reverse Proxy with Nginx
-
-To serve on port 80/443 and add a domain name, install Nginx:
-
-```bash
-sudo apt-get install -y nginx
-```
-
-Create a site config at `/etc/nginx/sites-available/mc-manager`:
-
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
-
-```bash
-sudo ln -s /etc/nginx/sites-available/mc-manager /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
-```
-
-### 5. Stopping and Updating
-
-```bash
-# Stop
-docker compose -f docker-compose.prod.yml down
-
-# Pull latest changes and restart
-git pull
-docker compose -f docker-compose.prod.yml up -d --build
-```
 
 > **Note:** The app mounts `/var/run/docker.sock` to manage Minecraft server containers. Make sure the user running Docker has permission to access the socket, or add your user to the `docker` group (`sudo usermod -aG docker $USER`).
