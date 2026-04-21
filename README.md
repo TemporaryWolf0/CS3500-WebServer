@@ -120,7 +120,7 @@ sudo apt-get install -y git
 ### 1. Clone and Configure
 
 ```bash
-git clone https://github.com/DrCDeVries/CS3500-WebServer.git
+git clone https://github.com/TemporaryWolf0/CS3500-WebServer.git
 cd CS3500-WebServer
 cp template.env .env
 ```
